@@ -69,7 +69,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             }
         );
 
-        responseBody(response);
+        responseBody(response,tokenResponse);
     }
 
     @Override
@@ -78,11 +78,11 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         response.setStatus(401);
     }
 
-    private CommonResponse<String> responseBody(HttpServletResponse response) {
+    private CommonResponse<String> responseBody(HttpServletResponse response,TokenResponseDto tokenResponseDto) {
         CommonResponse<String> responseMessage = new CommonResponse<>(
             "로그인이 완료되었습니다.",
             HttpStatus.OK.value(),
-            null
+            tokenResponseDto.getAccessToken()
         );
 
         response.setContentType("application/json; charset=UTF-8");
