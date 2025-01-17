@@ -16,6 +16,8 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class JwtUtil {
+    public static final String AUTHORIZATION_HEADER = "Authorization";
+    public static final String REFRESH_TOKEN_HEADER = "RefreshToken";
     public static final String AUTHORIZATION_KEY = "auth";
     public static final String BEARER_PREFIX = "Bearer ";
 

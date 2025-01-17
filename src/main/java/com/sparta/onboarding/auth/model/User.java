@@ -33,10 +33,17 @@ public class User {
     @Enumerated(EnumType.STRING)
     private RoleEnum authorityName;
 
+    @Column(name = "refresh_token")
+    private String refreshToken;
+
     public User(SignupRequestDto signupRequestDto) {
         this.username= signupRequestDto.getUsername();
         this.password=signupRequestDto.getPassword();
         this.nickname=signupRequestDto.getNickname();
         this.authorityName=RoleEnum.ROLE_USER;
+    }
+
+    public void updateRefresh(String refreshToken){
+        this.refreshToken=refreshToken;
     }
 }
