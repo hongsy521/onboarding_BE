@@ -1,0 +1,102 @@
+package com.sparta.onboarding.auth.security;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sparta.onboarding.auth.UserRepository;
+import com.sparta.onboarding.auth.dto.LoginRequestDto;
+import com.sparta.onboarding.auth.dto.TokenResponseDto;
+import com.sparta.onboarding.auth.jwt.JwtUtil;
+import com.sparta.onboarding.auth.model.RoleEnum;
+import com.sparta.onboarding.common.CommonResponse;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+@Slf4j(topic = "로그인 및 JWT 생성")
+public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
+
+    private final JwtUtil jwtUtil;
+    private final UserRepository userRepository;
+
+    public JwtAuthenticationFilter(JwtUtil jwtUtil, UserRepository userRepository) {
+        this.jwtUtil = jwtUtil;
+        this.userRepository = userRepository;
+        setFilterProcessesUrl("/api/login");
+    }
+
+    @Override
+    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
+        throws AuthenticationException {
+        log.info("로그인 시도");
+        try {
+            LoginRequestDto requestDto = new ObjectMapper().readValue(request.getInputStream(), LoginRequestDto.class);
+
+            return getAuthenticationManager().authenticate(
+                new UsernamePasswordAuthenticationToken(
+                    requestDto.getUsername(),
+                    requestDto.getPassword(),
+                    null
+                )
+            );
+        } catch (IOException e) {
+            log.error(e.getMessage());
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    @Override
+    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) {
+        log.info("로그인 성공 및 JWT 생성");
+
+        String username = ((UserDetailsImpl) authResult.getPrincipal()).getUsername();
+        RoleEnum role = ((UserDetailsImpl) authResult.getPrincipal()).getUser().getAuthorityName();
+        TokenResponseDto tokenResponse = jwtUtil.createToken(username, role);
+
+        response.addHeader(JwtUtil.AUTHORIZATION_HEADER, tokenResponse.getAccessToken());
+        response.addHeader(JwtUtil.REFRESH_TOKEN_HEADER, tokenResponse.getRefreshToken());
+
+        // 리프래쉬 토큰 유저 DB에 추가
+        userRepository.findByUsername(username).ifPresent(
+            user -> {
+                user.updateRefresh(tokenResponse.getRefreshToken());
+                userRepository.save(user);
+            }
+        );
+
+        responseBody(response,tokenResponse);
+    }
+
+    @Override
+    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) {
+        log.info("로그인 실패");
+        response.setStatus(401);
+    }
+
+    private CommonResponse<String> responseBody(HttpServletResponse response,TokenResponseDto tokenResponseDto) {
+        CommonResponse<String> responseMessage = new CommonResponse<>(
+            "로그인이 완료되었습니다.",
+            HttpStatus.OK.value(),
+            tokenResponseDto.getAccessToken()
+        );
+
+        response.setContentType("application/json; charset=UTF-8");
+        response.setStatus(HttpStatus.OK.value());
+
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            String jsonResponse = objectMapper.writeValueAsString(responseMessage);
+            response.getWriter().write(jsonResponse);
+        } catch (IOException e) {
+            log.error("응답 작성 중 오류 발생: {}", e.getMessage());
+        }
+        return responseMessage;
+    }
+
+}
+
