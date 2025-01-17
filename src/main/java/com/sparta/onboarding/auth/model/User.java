@@ -1,5 +1,6 @@
-package com.sparta.onboarding.model;
+package com.sparta.onboarding.auth.model;
 
+import com.sparta.onboarding.auth.dto.SignupRequestDto;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -8,9 +9,13 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
+@Getter
 @Entity
 @Table(name = "users")
+@RequiredArgsConstructor
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,4 +32,11 @@ public class User {
 
     @Enumerated(EnumType.STRING)
     private RoleEnum authorityName;
+
+    public User(SignupRequestDto signupRequestDto) {
+        this.username= signupRequestDto.getUsername();
+        this.password=signupRequestDto.getPassword();
+        this.nickname=signupRequestDto.getNickname();
+        this.authorityName=RoleEnum.ROLE_USER;
+    }
 }

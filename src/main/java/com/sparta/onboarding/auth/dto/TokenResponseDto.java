@@ -1,4 +1,4 @@
-package com.sparta.onboarding.dto;
+package com.sparta.onboarding.auth.dto;
 
 import lombok.Getter;
 
