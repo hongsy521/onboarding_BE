@@ -16,11 +16,9 @@ public class UserService {
 
     @Transactional
     public SignupResponseDto signup(SignupRequestDto signupRequestDto) {
-        User findUser = userRepository.findByUsername(signupRequestDto.getUsername());
-        // 이미 회원가입 되어있는 경우 예외처리
-        if(findUser!=null){
-            throw new CustomException(ErrorCode.DUPLICATE_USER);
-        }
+        userRepository.findByUsername(signupRequestDto.getUsername()).ifPresent(
+            user -> {throw new CustomException(ErrorCode.DUPLICATE_USER);}
+        );
 
         User user = new User(signupRequestDto);
         userRepository.save(user);
