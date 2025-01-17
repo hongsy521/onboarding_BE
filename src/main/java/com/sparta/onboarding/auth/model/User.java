@@ -31,14 +31,15 @@ public class User {
     private String nickname;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "authority_name")
     private RoleEnum authorityName;
 
     @Column(name = "refresh_token")
     private String refreshToken;
 
-    public User(SignupRequestDto signupRequestDto) {
+    public User(SignupRequestDto signupRequestDto,String password) {
         this.username= signupRequestDto.getUsername();
-        this.password=signupRequestDto.getPassword();
+        this.password=password;
         this.nickname=signupRequestDto.getNickname();
         this.authorityName=RoleEnum.ROLE_USER;
     }
