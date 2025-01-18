@@ -2,6 +2,7 @@ package com.sparta.onboarding.auth;
 
 import com.sparta.onboarding.auth.dto.SignupRequestDto;
 import com.sparta.onboarding.auth.dto.SignupResponseDto;
+import com.sparta.onboarding.auth.model.RoleEnum;
 import com.sparta.onboarding.auth.model.User;
 import com.sparta.onboarding.exception.CustomException;
 import com.sparta.onboarding.exception.ErrorCode;
@@ -22,7 +23,14 @@ public class UserService {
             user -> {throw new CustomException(ErrorCode.DUPLICATE_USER);}
         );
         String password = passwordEncoder.encode(signupRequestDto.getPassword());
-        User user = new User(signupRequestDto,password);
+
+        User user = User.builder()
+            .username(signupRequestDto.getUsername())
+            .password(password)
+            .nickname(signupRequestDto.getNickname())
+            .authorityName(RoleEnum.ROLE_USER)
+            .build();
+
         userRepository.save(user);
         return new SignupResponseDto(user);
     }

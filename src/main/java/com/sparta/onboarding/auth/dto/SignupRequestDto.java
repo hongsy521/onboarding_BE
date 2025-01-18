@@ -12,4 +12,9 @@ public class SignupRequestDto {
     @NotBlank(message = "nickname을 입력해주세요.")
     private String nickname;
 
+    public SignupRequestDto(String username, String password, String nickname) {
+        this.username=username;
+        this.password=password;
+        this.nickname=nickname;
+    }
 }

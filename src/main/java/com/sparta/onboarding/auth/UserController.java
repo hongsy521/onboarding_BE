@@ -22,6 +22,6 @@ public class UserController {
     public ResponseEntity<CommonResponse<SignupResponseDto>> signup(@Valid @RequestBody SignupRequestDto signupRequestDto){
         SignupResponseDto responseDto = userService.signup(signupRequestDto);
         CommonResponse response = new CommonResponse("회원가입이 완료되었습니다.",201,responseDto);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 }
