@@ -9,6 +9,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -37,11 +38,12 @@ public class User {
     @Column(name = "refresh_token")
     private String refreshToken;
 
-    public User(SignupRequestDto signupRequestDto,String password) {
-        this.username= signupRequestDto.getUsername();
-        this.password=password;
-        this.nickname=signupRequestDto.getNickname();
-        this.authorityName=RoleEnum.ROLE_USER;
+    @Builder
+    public User(String username, String password, String nickname, RoleEnum authorityName) {
+        this.username = username;
+        this.password = password;
+        this.nickname = nickname;
+        this.authorityName = authorityName;
     }
 
     public void updateRefresh(String refreshToken){
