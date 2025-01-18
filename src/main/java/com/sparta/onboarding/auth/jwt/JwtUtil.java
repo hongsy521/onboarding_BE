@@ -135,4 +135,8 @@ public class JwtUtil {
         return substringToken(refreshToken);
     }
 
+    protected Key getTestKey() {
+        return key;
+    }
+
 }
