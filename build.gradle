@@ -46,7 +46,7 @@ dependencies {
 
     runtimeOnly 'com.h2database:h2:2.1.214'
 
-    implementation 'org.springdoc:springdoc-openapi-ui:1.6.10'
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
 }
 
 tasks.named('test') {
