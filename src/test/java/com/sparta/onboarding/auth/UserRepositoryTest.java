@@ -1,13 +1,15 @@
 package com.sparta.onboarding.auth;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import com.sparta.onboarding.auth.model.RoleEnum;
 import com.sparta.onboarding.auth.model.User;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.transaction.annotation.Transactional;
 
 @DataJpaTest
 class UserRepositoryTest {
@@ -22,6 +24,7 @@ class UserRepositoryTest {
             .username(username)
             .password("1234")
             .nickname("닉네임")
+            .authorityName(RoleEnum.ROLE_USER)
             .build();
 
         userRepository.save(user);
