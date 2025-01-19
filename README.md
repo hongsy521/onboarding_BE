@@ -19,19 +19,23 @@
 </details>
 
 - Spring Security란?
-  - ![Sample Image](src/main/resources/static/img/springsecurity.png)<br/>
+  - Spring Security는 애플리케이션의 보안(인증과 권한, 인가 등)을 담당한다.
+  - '인증'과 '권한'에 대한 부분을 Filter 흐름에 따라 처리하고 있다.
+  ![Sample Image](src/main/resources/static/img/springsecurity.png)
+  <br/><br/>
 #### 2. JWT 기본 이해
 - JWT란 무엇인가?
   - JWT는 유저를 인증하고 식별하기 위한 토큰(Token) 기반 인증이다.<br/>
   - 토큰 자체에 사용자의 권한 정보나 서비스를 사용하기 위한 정보가 포함된다.
   - RESTful과 같은 무상태(Stateless)인 환경에서 사용자 데이터를 주고받을 수 있다.
   ![Sample Image](src/main/resources/static/img/jwt.png)
+    <br/><br/>
 #### 3. Access / Refresh Token 발행과 검증
 - 토큰 발행 : JwtUtil createToken()
   - 토큰 발행 테스트 : JwtUtilTest testCreateToken()
 - 유효성 확인 : JwtUtil validateToken()
   - 유효성 확인 테스트 : JwtUtilTest 경우별 testValidateToken()
-
+    <br/><br/>
 #### 4. 백엔드 EC2 배포 / Swagger UI
 - 회원가입 /api/signup (UserController에 구현)
 - 로그인 /api/login (JwtAuthenticationFilter에 구현)
