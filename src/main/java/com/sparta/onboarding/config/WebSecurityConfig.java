@@ -65,6 +65,7 @@ public class WebSecurityConfig {
                     .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
                     .requestMatchers("/api/signup").permitAll()
                     .requestMatchers("/api/login").permitAll()
+                    .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                     .anyRequest().authenticated()
         );
 

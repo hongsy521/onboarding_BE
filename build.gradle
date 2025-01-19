@@ -45,6 +45,8 @@ dependencies {
     testImplementation 'org.mockito:mockito-junit-jupiter:5.5.0'
 
     runtimeOnly 'com.h2database:h2:2.1.214'
+
+    implementation 'org.springdoc:springdoc-openapi-ui:1.6.10'
 }
 
 tasks.named('test') {
